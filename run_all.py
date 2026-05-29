@@ -170,7 +170,7 @@ def run_grpo_training(normalize_by_std: bool = True, n_steps: int = 50, run_tag:
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-5, betas=(0.9, 0.95))
 
-    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.4, dtype="bfloat16")
+    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.25, dtype="bfloat16", max_model_len=600)
 
     train_examples = load_gsm8k_examples("train")
     train_prompts = build_prompts(train_examples, str(COT_PROMPT_TEMPLATE))
