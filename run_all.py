@@ -180,9 +180,9 @@ def run_grpo_training(normalize_by_std: bool = True, n_steps: int = 50, run_tag:
     eval_prompts = build_prompts(eval_examples, str(COT_PROMPT_TEMPLATE))
     eval_gts = [ex["answer"].split("#### ")[-1].strip() for ex in eval_examples]
 
-    rollout_batch_size = 32
+    rollout_batch_size = 4
     group_size = 8
-    gradient_accumulation_steps = 16
+    gradient_accumulation_steps = 4
     cliprange = 1.0
     advantage_eps = 1e-6
 
