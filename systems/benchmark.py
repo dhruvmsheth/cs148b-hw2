@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import time
 from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
@@ -57,12 +58,25 @@ def build_argparser() -> argparse.ArgumentParser:
 
 def build_model(config: BenchmarkConfig) -> torch.nn.Module:
     """Instantiate the staff Basics transformer for the requested model size."""
-    raise NotImplementedError
+    from basics.model import BasicsTransformerLM
+
+    spec = MODEL_SPECS[config.model_size]
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = BasicsTransformerLM(
+        vocab_size=config.vocab_size,
+        context_length=config.context_length,
+        d_model=spec.d_model,
+        num_layers=spec.num_layers,
+        num_heads=spec.num_heads,
+        d_ff=spec.d_ff,
+        rope_theta=10000.0,
+    ).to(device)
+    return model
 
 
 def make_random_batch(config: BenchmarkConfig, device: torch.device) -> torch.Tensor:
     """Construct a random token batch for benchmarking and profiling."""
-    raise NotImplementedError
+    return torch.randint(0, config.vocab_size, (config.batch_size, config.context_length), device=device)
 
 
 def run_single_step(
@@ -72,27 +86,81 @@ def run_single_step(
     autocast_context,
 ) -> None:
     """Execute one benchmark step and synchronize CUDA before returning."""
-    raise NotImplementedError
+    if mode == "forward":
+        with autocast_context:
+            with torch.no_grad():
+                _ = model(batch)
+    elif mode == "forward-backward":
+        with autocast_context:
+            logits = model(batch)
+            loss = logits.sum()
+        loss.backward()
+    elif mode == "train-step":
+        optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
+        optimizer.zero_grad()
+        with autocast_context:
+            logits = model(batch)
+            loss = logits.sum()
+        loss.backward()
+        optimizer.step()
+
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
 
 
 def benchmark_model(config: BenchmarkConfig) -> dict[str, float]:
     """Run warmup steps followed by timed measurement steps."""
-    raise NotImplementedError
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = build_model(config)
+
+    if config.compile_model:
+        model = torch.compile(model)
+
+    batch = make_random_batch(config, device)
+    autocast_ctx = make_autocast_context(config.use_bf16)
+
+    maybe_start_memory_history(config.use_memory_profiler)
+
+    for _ in range(config.warmup_steps):
+        run_single_step(model, batch, config.mode, autocast_ctx)
+
+    start = time.perf_counter()
+    for _ in range(config.measure_steps):
+        run_single_step(model, batch, config.mode, autocast_ctx)
+    end = time.perf_counter()
+
+    maybe_dump_memory_snapshot(
+        config.use_memory_profiler,
+        config.output_dir / f"memory_{config.model_size}_{config.mode}.pickle",
+    )
+
+    elapsed = end - start
+    avg_ms = (elapsed / config.measure_steps) * 1000
+    print(f"[{config.model_size}] mode={config.mode} bf16={config.use_bf16} compile={config.compile_model}: {avg_ms:.2f} ms/step")
+    return {"avg_ms_per_step": avg_ms, "total_s": elapsed}
 
 
 def annotated_scaled_dot_product_attention(*args, **kwargs):
     """Optional NVTX-annotated attention path for Nsight Systems profiling."""
-    raise NotImplementedError
+    import torch.cuda.nvtx as nvtx
+    from basics.model import scaled_dot_product_attention
+
+    nvtx.range_push("scaled_dot_product_attention")
+    result = scaled_dot_product_attention(*args, **kwargs)
+    nvtx.range_pop()
+    return result
 
 
 def maybe_start_memory_history(enabled: bool) -> None:
     if enabled:
-        raise NotImplementedError
+        torch.cuda.memory._record_memory_history(max_entries=100_000)
 
 
 def maybe_dump_memory_snapshot(enabled: bool, output_path: Path) -> None:
     if enabled:
-        raise NotImplementedError
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        torch.cuda.memory._dump_snapshot(str(output_path))
+        torch.cuda.memory._record_memory_history(enabled=None)
 
 
 def make_autocast_context(use_bf16: bool):
