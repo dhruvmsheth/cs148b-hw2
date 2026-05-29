@@ -12,7 +12,7 @@ import wandb
 ARTIFACTS = Path("artifacts")
 ARTIFACTS.mkdir(exist_ok=True)
 
-WANDB_ENTITY = "dhruvsheth"
+WANDB_ENTITY = "dsheth_caltech"
 WANDB_PROJECT = "cs148b-hw2"
 HF_MODEL = "Qwen/Qwen2.5-Math-1.5B"
 HF_REPO = "dhruvmsheth/cs148b-hw2-grpo"
