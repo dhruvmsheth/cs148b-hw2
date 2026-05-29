@@ -40,10 +40,14 @@ def tokenize_prompt_and_output(
 
 
 def compute_entropy(logits: Tensor) -> Tensor:
-    """Compute per-token entropies over the vocabulary dimension."""
-    log_probs = torch.log_softmax(logits, dim=-1)
-    probs = torch.exp(log_probs)
-    return -(probs * log_probs).sum(dim=-1)
+    """Compute per-token entropies over the vocabulary dimension (chunked to save memory)."""
+    chunk = 4096
+    entropy = torch.zeros(logits.shape[:-1], device=logits.device, dtype=logits.dtype)
+    for i in range(0, logits.shape[-1], chunk):
+        lp = torch.log_softmax(logits[..., i:i+chunk], dim=-1)
+        p = lp.exp()
+        entropy -= (p * lp).sum(dim=-1)
+    return entropy
 
 
 def get_response_log_probs(
@@ -54,8 +58,10 @@ def get_response_log_probs(
 ) -> dict[str, Tensor]:
     """Score conditional log-probabilities for a batch of prompt/response examples."""
     logits = model(input_ids).logits
-    log_probs = torch.log_softmax(logits, dim=-1)
-    token_log_probs = log_probs.gather(-1, labels.unsqueeze(-1)).squeeze(-1)
+    # compute log_prob only for the target tokens to avoid materializing full (B, T, V) log_softmax
+    log_z = torch.logsumexp(logits, dim=-1)
+    target_logit = logits.gather(-1, labels.unsqueeze(-1)).squeeze(-1)
+    token_log_probs = target_logit - log_z
     result = {"log_probs": token_log_probs}
     if return_token_entropy:
         result["token_entropy"] = compute_entropy(logits)
