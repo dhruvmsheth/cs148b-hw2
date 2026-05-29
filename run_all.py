@@ -78,7 +78,7 @@ def run_gsm8k_baselines():
     from alignment.prompts import DIRECT_PROMPT_TEMPLATE, COT_PROMPT_TEMPLATE
 
     print("=== Part 2: GSM8K Baselines ===")
-    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.5)
+    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.6, max_model_len=1024)
 
     examples = load_gsm8k_examples("test")[:DEFAULT_VALIDATION_SIZE]
     ground_truths = [ex["answer"].split("#### ")[-1].strip() for ex in examples]
@@ -105,7 +105,7 @@ def run_gsm8k_baselines():
     from alignment.drgrpo_grader import grade
 
     k = 5
-    sc_params = SamplingParams(temperature=1.0, max_tokens=512, n=k)
+    sc_params = SamplingParams(temperature=1.0, max_tokens=256, n=k)
     sc_outputs = llm.generate(cot_prompts, sc_params)
     correct = 0
     sc_records = []
