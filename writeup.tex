@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{float}
 \usepackage{hyperref}
 
 \title{EE/CS 148B HW2: Profiling and Reasoning}
@@ -13,6 +14,8 @@
 \maketitle
 
 %% -------------------------------------------------------
+All profiling and training was run on a RunPod A100-SXM 80GB instance.
+
 \section*{2.3 Benchmarking}
 
 Table~\ref{tab:bench} shows forward and forward+backward times on an A100
@@ -32,6 +35,12 @@ large  & 39.5     & 42.1     & 127.2        & 115.4 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{benchmark.pdf}
+\caption{Forward and forward+backward latency (ms/step) on A100 for all model sizes.}
+\end{figure}
 
 The backward pass takes roughly 2--3$\times$ longer than forward, which makes
 sense: backprop stores activations for gradient computation.
@@ -158,18 +167,11 @@ The validation reward curve shows gradual improvement from about 0.04 at step 0
 to about 0.05--0.07 after 50 steps.
 Longer training (500+ steps) would likely show more pronounced improvement.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\fbox{\rule{0pt}{4cm}\rule{8cm}{0pt}}
-\caption{Validation reward curve over 50 training steps (placeholder).}
-\label{fig:reward}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\fbox{\rule{0pt}{4cm}\rule{8cm}{0pt}}
-\caption{Training loss curve over 50 training steps (placeholder).}
-\label{fig:loss}
+\includegraphics[width=0.9\textwidth]{grpo_curves.pdf}
+\caption{GRPO training: mean reward (left) and GRPO clip loss (right) over 50 steps for both normalization variants.}
+\label{fig:grpo}
 \end{figure}
 
 \end{document}
