@@ -1,0 +1,89 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: dsheth (dsheth_caltech) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.27.0
+wandb: Run data is saved locally in /root/wandb/run-20260530_054501-bxh18hyx
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run grpo_normalize_std_v2
+wandb: ⭐️ View project at https://wandb.ai/dsheth_caltech/cs148b-hw2
+wandb: 🚀 View run at https://wandb.ai/dsheth_caltech/cs148b-hw2/runs/bxh18hyx
+You are attempting to use Flash Attention 2.0 with a model not initialized on GPU. Make sure to move the model to GPU after initializing it on CPU with `model.to('cuda')`.
+
+=== GRPO Training: grpo_normalize_std_v2 normalize_by_std=True ===
+Loading model...
+[grpo_normalize_std_v2] step=0/50 loss=0.000000 mean_reward=0.0000
+[grpo_normalize_std_v2] step=1/50 loss=-0.000000 mean_reward=0.0938
+[grpo_normalize_std_v2] step=2/50 loss=0.000000 mean_reward=0.1250
+[grpo_normalize_std_v2] step=3/50 loss=0.000000 mean_reward=0.0312
+[grpo_normalize_std_v2] step=4/50 loss=0.000000 mean_reward=0.1875
+[grpo_normalize_std_v2] step=5/50 loss=0.000000 mean_reward=0.0312
+[grpo_normalize_std_v2] step=6/50 loss=-0.000000 mean_reward=0.0625
+[grpo_normalize_std_v2] step=7/50 loss=-0.000000 mean_reward=0.1250
+[grpo_normalize_std_v2] step=8/50 loss=-0.000000 mean_reward=0.0938
+[grpo_normalize_std_v2] step=9/50 loss=0.000000 mean_reward=0.1562
+[grpo_normalize_std_v2] step=9 eval_accuracy=0.4570
+[grpo_normalize_std_v2] step=10/50 loss=0.000000 mean_reward=0.1875
+[grpo_normalize_std_v2] step=11/50 loss=0.000000 mean_reward=0.1875
+[grpo_normalize_std_v2] step=12/50 loss=0.000000 mean_reward=0.3438
+[grpo_normalize_std_v2] step=13/50 loss=-0.000000 mean_reward=0.1250
+[grpo_normalize_std_v2] step=14/50 loss=-0.000000 mean_reward=0.1875
+[grpo_normalize_std_v2] step=15/50 loss=-0.000000 mean_reward=0.2812
+[grpo_normalize_std_v2] step=16/50 loss=0.000000 mean_reward=0.3750
+[grpo_normalize_std_v2] step=17/50 loss=0.000000 mean_reward=0.3125
+[grpo_normalize_std_v2] step=18/50 loss=-0.000000 mean_reward=0.0625
+[grpo_normalize_std_v2] step=19/50 loss=0.000000 mean_reward=0.3750
+[grpo_normalize_std_v2] step=19 eval_accuracy=0.6367
+[grpo_normalize_std_v2] step=20/50 loss=0.000000 mean_reward=0.4062
+[grpo_normalize_std_v2] step=21/50 loss=0.000000 mean_reward=0.2500
+[grpo_normalize_std_v2] step=22/50 loss=0.000000 mean_reward=0.2812
+[grpo_normalize_std_v2] step=23/50 loss=0.000000 mean_reward=0.2500
+[grpo_normalize_std_v2] step=24/50 loss=-0.000000 mean_reward=0.3125
+[grpo_normalize_std_v2] step=25/50 loss=0.000000 mean_reward=0.3438
+[grpo_normalize_std_v2] step=26/50 loss=0.000000 mean_reward=0.3750
+[grpo_normalize_std_v2] step=27/50 loss=0.000000 mean_reward=0.3750
+[grpo_normalize_std_v2] step=28/50 loss=-0.000000 mean_reward=0.5312
+[grpo_normalize_std_v2] step=29/50 loss=-0.000000 mean_reward=0.4688
+[grpo_normalize_std_v2] step=29 eval_accuracy=0.7031
+[grpo_normalize_std_v2] step=30/50 loss=-0.000000 mean_reward=0.2188
+[grpo_normalize_std_v2] step=31/50 loss=0.000000 mean_reward=0.4062
+[grpo_normalize_std_v2] step=32/50 loss=-0.000000 mean_reward=0.4375
+[grpo_normalize_std_v2] step=33/50 loss=0.000000 mean_reward=0.5000
+[grpo_normalize_std_v2] step=34/50 loss=-0.000000 mean_reward=0.6875
+[grpo_normalize_std_v2] step=35/50 loss=-0.000000 mean_reward=0.5938
+[grpo_normalize_std_v2] step=36/50 loss=0.000000 mean_reward=0.5312
+[grpo_normalize_std_v2] step=37/50 loss=0.000000 mean_reward=0.5938
+[grpo_normalize_std_v2] step=38/50 loss=0.000000 mean_reward=0.2812
+[grpo_normalize_std_v2] step=39/50 loss=-0.000000 mean_reward=0.6562
+[grpo_normalize_std_v2] step=39 eval_accuracy=0.7344
+[grpo_normalize_std_v2] step=40/50 loss=0.000000 mean_reward=0.5938
+[grpo_normalize_std_v2] step=41/50 loss=0.000000 mean_reward=0.3438
+[grpo_normalize_std_v2] step=42/50 loss=0.000000 mean_reward=0.5312
+[grpo_normalize_std_v2] step=43/50 loss=-0.000000 mean_reward=0.5938
+[grpo_normalize_std_v2] step=44/50 loss=0.000000 mean_reward=0.2188
+[grpo_normalize_std_v2] step=45/50 loss=0.000000 mean_reward=0.5000
+[grpo_normalize_std_v2] step=46/50 loss=0.000000 mean_reward=0.8750
+[grpo_normalize_std_v2] step=47/50 loss=-0.000000 mean_reward=0.7812
+[grpo_normalize_std_v2] step=48/50 loss=0.000000 mean_reward=0.5938
+[grpo_normalize_std_v2] step=49/50 loss=0.000000 mean_reward=0.4375
+[grpo_normalize_std_v2] step=49 eval_accuracy=0.7266
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb: eval_accuracy ▁▆▇██
+wandb:          loss ▆▄▆▆█▅▁▄▆▇▇▄▅▄▆▂▆▇▇█▇▆▇▁▃▆▂▇▁▃▇▆▅████▇▃▇
+wandb:   mean_reward ▁▂▂▁▃▁▂▂▃▃▂▃▃▄▃▄▄▃▃▃▄▄▄▅▅▄▅▅▇▆▆▃▆▆▄▃▅█▇▅
+wandb:    std_reward ▁▅▆▃▆▄▆▅▆▆█▆▆▇█▄██▇▇▇████▇███▇█▇███▇█▆▇█
+wandb:          step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇███
+wandb: 
+wandb: Run summary:
+wandb: eval_accuracy 0.72656
+wandb:          loss 0.0
+wandb:   mean_reward 0.4375
+wandb:    std_reward 0.50402
+wandb:          step 49
+wandb: 
+wandb: 🚀 View run grpo_normalize_std_v2 at: https://wandb.ai/dsheth_caltech/cs148b-hw2/runs/bxh18hyx
+wandb: ⭐️ View project at: https://wandb.ai/dsheth_caltech/cs148b-hw2
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260530_054501-bxh18hyx/logs
+Done: grpo_normalize_std_v2

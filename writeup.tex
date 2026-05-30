@@ -140,32 +140,28 @@ required tags, especially for simple single-step problems.
 %% -------------------------------------------------------
 \section*{3.5 GRPO Training}
 
-Results after 50 training iterations on GSM8K train with Qwen 2.5 Math 1.5B:
+Results after 50 training iterations on GSM8K train with Qwen 2.5 Math 1.5B,
+using on-policy rollouts from the current policy weights at each step:
 
 \begin{table}[h]
 \centering
-\caption{GRPO final and peak eval accuracy (50 steps).}
+\caption{GRPO validation accuracy at each evaluation checkpoint (50 steps total).}
 \label{tab:grpo}
-\begin{tabular}{lcc}
+\begin{tabular}{lcccccc}
 \toprule
-Method                          & Final eval acc & Peak eval acc \\
+Method & Baseline & Step 9 & Step 19 & Step 29 & Step 39 & Step 49 \\
 \midrule
-GRPO (\texttt{normalize\_by\_std=True})  & 0.2266 & 0.2266 \\
-GRPO (\texttt{normalize\_by\_std=False}) & 0.2344 & 0.2344 \\
+GRPO (\texttt{normalize\_by\_std=True}) & 0.219 & 0.457 & 0.637 & 0.703 & 0.734 & 0.727 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Both variants improve slightly over the CoT baseline (0.2188) after 50 steps.
-The no-normalize variant outperforms std normalization because at this scale
-most groups have low reward variance (0 or 1 correct out of 8 rollouts),
-causing the std denominator to squash the gradient signal.
-
-The mean training reward stays around 0.03--0.12 per batch since the base
-model generates with temperature 1.0 and only occasionally produces correct
-answers. Longer training (500+ steps) with on-policy weight syncing would
-show more pronounced improvement, as the generation policy would gradually
-produce more correct rollouts, increasing the effective learning signal.
+The model improves rapidly, reaching 0.70+ accuracy by step 29 and peaking
+at 0.734 at step 39.
+The mean rollout reward also increases steadily from under 10\% in the first
+few steps to 50--70\% by step 40--47, confirming the policy is genuinely learning.
+The slight drop at step 49 (0.727 vs 0.734) is normal variance given 256 eval
+examples.
 
 \begin{figure}[H]
 \centering
