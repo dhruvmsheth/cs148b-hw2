@@ -150,22 +150,22 @@ Results after 50 training iterations on GSM8K train with Qwen 2.5 Math 1.5B:
 \toprule
 Method                          & Final eval acc & Peak eval acc \\
 \midrule
-GRPO (\texttt{normalize\_by\_std=True})  & 0.2188 & 0.2344 \\
-GRPO (\texttt{normalize\_by\_std=False}) & 0.2344 & 0.2500 \\
+GRPO (\texttt{normalize\_by\_std=True})  & 0.2266 & 0.2266 \\
+GRPO (\texttt{normalize\_by\_std=False}) & 0.2344 & 0.2344 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-GRPO improves over the CoT baseline after 50 steps.
-The no-normalize variant slightly outperforms std normalization on this short
-run.
-Std normalization downweights questions where all responses are correct or all
-are wrong, reducing training signal for easy or hard questions; with only 50
-steps this can hurt learning.
+Both variants improve slightly over the CoT baseline (0.2188) after 50 steps.
+The no-normalize variant outperforms std normalization because at this scale
+most groups have low reward variance (0 or 1 correct out of 8 rollouts),
+causing the std denominator to squash the gradient signal.
 
-The validation reward curve shows gradual improvement from about 0.04 at step 0
-to about 0.05--0.07 after 50 steps.
-Longer training (500+ steps) would likely show more pronounced improvement.
+The mean training reward stays around 0.03--0.12 per batch since the base
+model generates with temperature 1.0 and only occasionally produces correct
+answers. Longer training (500+ steps) with on-policy weight syncing would
+show more pronounced improvement, as the generation policy would gradually
+produce more correct rollouts, increasing the effective learning signal.
 
 \begin{figure}[H]
 \centering

@@ -57,7 +57,7 @@ def run_grpo(normalize_by_std: bool, n_steps: int, tag: str):
     })
 
     print("Loading vllm...")
-    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.4, dtype="bfloat16", max_model_len=600)
+    llm = LLM(model=HF_MODEL, gpu_memory_utilization=0.25, dtype="bfloat16", max_model_len=600)
 
     print("Loading HF model...")
     tokenizer = AutoTokenizer.from_pretrained(HF_MODEL)
@@ -78,21 +78,22 @@ def run_grpo(normalize_by_std: bool, n_steps: int, tag: str):
 
     rollout_batch_size = 32
     group_size = 8
+    n_prompts_per_batch = rollout_batch_size // group_size  # 4
     gradient_accumulation_steps = 16
     cliprange = 1.0
     advantage_eps = 1e-6
-    hf_chunk_size = 4
+    hf_chunk_size = 2
     all_metrics = []
 
     for step in range(n_steps):
-        indices = random.sample(range(len(train_prompts)), rollout_batch_size)
+        indices = random.sample(range(len(train_prompts)), n_prompts_per_batch)
         batch_prompts = [train_prompts[i] for i in indices]
         batch_gts_step = [train_gts[i] for i in indices]
 
         repeated_prompts = [p for p in batch_prompts for _ in range(group_size)]
         repeated_gts = [g for g in batch_gts_step for _ in range(group_size)]
 
-        outputs = llm.generate(repeated_prompts, SamplingParams(temperature=1.0, max_tokens=256))
+        outputs = llm.generate(repeated_prompts, SamplingParams(temperature=1.0, max_tokens=256, min_tokens=4))
         rollout_responses = [o.outputs[0].text for o in outputs]
 
         # Replace empty responses
